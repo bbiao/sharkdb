@@ -1,24 +1,28 @@
-# define gtest
-ifndef GTEST_DIR
-	GTEST_DIR = ../googletest
+ifndef BRPC_DIR
+	BRPC_DIR = ../brpc
+endif
+include $(BRPC_DIR)/config.mk
+
+ifndef GFLAGS_DIR
+	GFLAGS_DIR = ../gflags
 endif
 
 ifndef ROCKSDB_DIR
 	ROCKSDB_DIR = ../rocksdb
 endif
 
-ifndef BRPC_DIR
-	BRPC_DIR = ../brpc
+ifndef GTEST_DIR
+	GTEST_DIR = ../googletest
 endif
 
 CC = gcc
 CXX = g++
 CFLAGS = -W -Wall -ggdb -fPIC
-CXXFLAGS = -W -Wall -ggdb -fPIC
-INCPATH = -I./include -I$(ROCKSDB_DIR)/include
-LIBPATH = -L./ -L$(ROCKSDB_DIR)
-LDFLAGS = -lrocksdb -lpthread
-SOURCES = src/node.cc
+CXXFLAGS += $(CPPFLAGS) -std=c++0x -DNDEBUG -O2 -D__const__= -pipe -ggdb -W -Wall -Wno-unused-parameter -fPIC -fno-omit-frame-pointer
+INCPATH = -I./include -I$(GFLAGS_DIR)/include -I$(ROCKSDB_DIR)/include -I$(BRPC_DIR)/output/include
+LIBPATH = -L/usr/lib/x86_64-linux-gnu -L./ -L$(GFLAGS_DIR)/lib -L$(ROCKSDB_DIR) -L$(BRPC_DIR)/output/lib
+LDFLAGS = -lgflags -lrocksdb -lbrpc
+SOURCES = src/node.cc src/replica.cc
 OBJECTS = $(SOURCES:.cc=.o)
 #OBJECTS = $(patsubst %.cc,bm_%.o,$(SOURCES))
 
@@ -32,8 +36,13 @@ BINARY = node
 
 all : $(LIB) $(BINARY)
 
-$(BINARY) : src/main.cc $(LIB)
-	$(CXX) $(CXXFLAGS) $(INCPATH) $(LIBPATH) $< $(LDFLAGS) -o $@
+src/main.o : src/main.cc
+	$(CXX) $(CXXFLAGS) $(INCPATH) -c $< -o $@
+
+$(BINARY) : src/main.o $(OBJECTS)
+	$(CXX) $(LIBPATH) -Xlinker "-(" $^ -Wl,-Bstatic $(STATIC_LINKINGS) $(LDFLAGS) -Wl,-Bdynamic -Xlinker "-)" $(DYNAMIC_LINKINGS) -o $@
+
+#$(CXX) $(CXXFLAGS) $(INCPATH) $(LIBPATH) $< $(LDFLAGS) -lnode -o $@
 
 $(LIB) : $(OBJECTS)
 	ar -cr $@ $^
