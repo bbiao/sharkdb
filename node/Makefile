@@ -21,8 +21,9 @@ CFLAGS = -W -Wall -ggdb -fPIC
 CXXFLAGS += $(CPPFLAGS) -std=c++0x -DNDEBUG -O2 -D__const__= -pipe -ggdb -W -Wall -Wno-unused-parameter -fPIC -fno-omit-frame-pointer
 INCPATH = -I./include -I$(GFLAGS_DIR)/include -I$(ROCKSDB_DIR)/include -I$(BRPC_DIR)/output/include
 LIBPATH = -L/usr/lib/x86_64-linux-gnu -L./ -L$(GFLAGS_DIR)/lib -L$(ROCKSDB_DIR) -L$(BRPC_DIR)/output/lib
-LDFLAGS = -lgflags -lrocksdb -lbrpc
-SOURCES = src/node.cc src/replica.cc
+LDFLAGS = -lgflags -lrocksdb -lbrpc -lnode
+SOURCES := $(wildcard src/*.cc)
+SOURCES := $(filter-out src/main.cc, $(SOURCES))
 OBJECTS = $(SOURCES:.cc=.o)
 #OBJECTS = $(patsubst %.cc,bm_%.o,$(SOURCES))
 
@@ -34,21 +35,21 @@ LIB = libnode.a
 
 BINARY = node
 
+#$< first
+#$^ all
+#$@ target
+#$? file changed
+
 all : $(LIB) $(BINARY)
 
-src/main.o : src/main.cc
-	$(CXX) $(CXXFLAGS) $(INCPATH) -c $< -o $@
-
-$(BINARY) : src/main.o $(OBJECTS)
-	$(CXX) $(LIBPATH) -Xlinker "-(" $^ -Wl,-Bstatic $(STATIC_LINKINGS) $(LDFLAGS) -Wl,-Bdynamic -Xlinker "-)" $(DYNAMIC_LINKINGS) -o $@
-
-#$(CXX) $(CXXFLAGS) $(INCPATH) $(LIBPATH) $< $(LDFLAGS) -lnode -o $@
+$(BINARY) : src/main.o $(LIB)
+	$(CXX) $(LIBPATH) -Xlinker "-(" $< -Wl,-Bstatic $(STATIC_LINKINGS) $(LDFLAGS) -Wl,-Bdynamic -Xlinker "-)" $(DYNAMIC_LINKINGS) -o $@
 
 $(LIB) : $(OBJECTS)
 	ar -cr $@ $^
 
 .cc.o :
-	$(CXX) $(CXXFLAGS) $(INCPATH) -c $< -o $@
+	$(CXX) $(CXXFLAGS) $(TEST_INCPATH) -c $< -o $@
 
 clean : clean_test
 	rm -rf $(LIB) $(OBJECTS) $(BINARY)
@@ -59,7 +60,13 @@ test : node_test
 clean_test :
 	rm -rf node_test
 
+TEST_SOURCES = $(wildcard test/*.cc)
+TEST_OBJECTS = $(TEST_SOURCES:.cc=.o)
+
 node_test : test/node_test.cc $(LIB)
 	$(CXX) $(CXXFLAGS) $(INCPATH) $(LIBPATH) $< $(LDFLAGS) -o $@
+
+replica_test : test/replica_test.o $(LIB)
+	$(CXX) $(TEST_LIBPATH) -Xlinker "-(" $< -Wl,-Bstatic $(STATIC_LINKINGS) $(TEST_LDFLAGS) -Wl,-Bdynamic -Xlinker "-)" $(DYNAMIC_LINKINGS) -o $@
 
 .PHONY : all clean test

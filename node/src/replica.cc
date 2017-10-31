@@ -8,12 +8,18 @@ Replica::Replica() : table_name(), fragment_id(UINT64_MAX), replica_id(UINT64_MA
 }
 
 Replica* Replica::Create(const ReplicaOptions& replica_options) {
-
-    return NULL;
+    Replica* replica = new Replica;
+    return replica;
 }
 
 Replica::~Replica() {
 
+}
+
+void Replica::Destroy() {
+    //TODO
+    
+    delete this;
 }
 
 }
