@@ -7,3 +7,6 @@
 [submodule "brpc"]
 	path = brpc
 	url = https://github.com/brpc/brpc.git
+[submodule "gflags"]
+	path = gflags
+	url = https://github.com/gflags/gflags.git
