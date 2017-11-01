@@ -1,6 +1,7 @@
 #ifndef SHARKDB_NODE_REPLICA_H
 #define SHARKDB_NODE_REPLICA_H
 #include "common.h"
+#include "storage_engine.h"
 
 SHARKDB_NODE_NS_BEGIN
 
@@ -40,6 +41,8 @@ private:
     uint64_t fragment_id;
     uint64_t replica_id;
     std::string path;
+
+    StorageEngine* engine;
 };
 
 SHARKDB_NODE_NS_END
