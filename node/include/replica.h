@@ -1,8 +1,8 @@
-#include <cstdint>
-#include <string>
+#ifndef SHARKDB_NODE_REPLICA_H
+#define SHARKDB_NODE_REPLICA_H
+#include "common.h"
 
-namespace sharkdb {
-namespace node {
+SHARKDB_NODE_NS_BEGIN
 
 struct ReplicaOptions {
 
@@ -31,6 +31,8 @@ public:
         return path;
     }
 
+    void Open();
+
     void Destroy();
 
 private:
@@ -40,5 +42,5 @@ private:
     std::string path;
 };
 
-}
-}
+SHARKDB_NODE_NS_END
+#endif//SHARKDB_NODE_REPLICA_H

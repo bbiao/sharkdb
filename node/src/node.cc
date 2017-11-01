@@ -1,7 +1,6 @@
 #include "node.h"
 
-namespace sharkdb {
-namespace node {
+SHARKDB_NODE_NS_BEGIN
 
 Node::Node() {
 
@@ -15,5 +14,4 @@ void Node::Start() {
 
 }
 
-}
-}
+SHARKDB_NODE_NS_END

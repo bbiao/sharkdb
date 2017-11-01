@@ -21,14 +21,13 @@ CFLAGS = -W -Wall -ggdb -fPIC
 CXXFLAGS += $(CPPFLAGS) -std=c++0x -DNDEBUG -O2 -D__const__= -pipe -ggdb -W -Wall -Wno-unused-parameter -fPIC -fno-omit-frame-pointer
 INCPATH = -I./include -I$(GFLAGS_DIR)/include -I$(ROCKSDB_DIR)/include -I$(BRPC_DIR)/output/include
 LIBPATH = -L/usr/lib/x86_64-linux-gnu -L./ -L$(GFLAGS_DIR)/lib -L$(ROCKSDB_DIR) -L$(BRPC_DIR)/output/lib
-LDFLAGS = -lgflags -lrocksdb -lbrpc -lnode
+LDFLAGS += $(STATIC_LINKINGS) -lrocksdb -lbrpc -lnode
 SOURCES := $(wildcard src/*.cc)
 SOURCES := $(filter-out src/main.cc, $(SOURCES))
 OBJECTS = $(SOURCES:.cc=.o)
-#OBJECTS = $(patsubst %.cc,bm_%.o,$(SOURCES))
 
-TEST_INCPATH = $(INCPATH) -I$(GTEST_DIR)/googletest/include  
-TEST_LIBPATH = $(LIBPATH) -L$(GTEST_DIR)/googlemock/gtest 
+TEST_INCPATH = $(INCPATH) -I$(GTEST_DIR)/googletest/include
+TEST_LIBPATH = $(LIBPATH) -L$(GTEST_DIR)/googlemock/gtest
 TEST_LDFLAGS = $(LDFLAGS) -lgtest
 
 LIB = libnode.a
@@ -43,7 +42,7 @@ BINARY = node
 all : $(LIB) $(BINARY)
 
 $(BINARY) : src/main.o $(LIB)
-	$(CXX) $(LIBPATH) -Xlinker "-(" $< -Wl,-Bstatic $(STATIC_LINKINGS) $(LDFLAGS) -Wl,-Bdynamic -Xlinker "-)" $(DYNAMIC_LINKINGS) -o $@
+	$(CXX) $(LIBPATH) -Xlinker "-(" $< -Wl,-Bstatic $(LDFLAGS) -Wl,-Bdynamic -Xlinker "-)" $(DYNAMIC_LINKINGS) -o $@
 
 $(LIB) : $(OBJECTS)
 	ar -cr $@ $^
@@ -52,16 +51,16 @@ $(LIB) : $(OBJECTS)
 	$(CXX) $(CXXFLAGS) $(TEST_INCPATH) -c $< -o $@
 
 clean : clean_test
-	rm -rf $(LIB) $(OBJECTS) $(BINARY)
+	@rm -rf $(LIB) $(OBJECTS) $(BINARY)
 
-test : node_test
+test : node_test replica_test
 	@./schema_test
 
 clean_test :
-	rm -rf node_test
+	@rm -rf node_test
 
 TEST_SOURCES = $(wildcard test/*.cc)
-TEST_OBJECTS = $(TEST_SOURCES:.cc=.o)
+TEST_OBJECTS = $(patsubst %.cc, %.o, $(TEST_SOURCES))
 
 node_test : test/node_test.cc $(LIB)
 	$(CXX) $(CXXFLAGS) $(INCPATH) $(LIBPATH) $< $(LDFLAGS) -o $@
