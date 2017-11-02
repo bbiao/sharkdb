@@ -6,5 +6,7 @@
  \__/_| |_|\__,_|_|  |_|\_\/___,'\_____/
                                         
 ```
-# sharkdb
+# SharkDB
 A distributed key-value store.
+
+Based on RocksDB & BRPC.
