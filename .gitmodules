@@ -1,15 +1,15 @@
 [submodule "googletest"]
 	path = googletest
 	url = https://github.com/google/googletest.git
-    ignore = dirty
+	ignore = dirty
 [submodule "rocksdb"]
 	path = rocksdb
 	url = https://github.com/facebook/rocksdb.git
-    ignore = dirty
+	ignore = dirty
 [submodule "brpc"]
 	path = brpc
 	url = https://github.com/brpc/brpc.git
-    ignore = dirty
+	ignore = dirty
 [submodule "gflags"]
 	path = gflags
 	url = https://github.com/gflags/gflags.git
