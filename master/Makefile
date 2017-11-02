@@ -15,7 +15,7 @@ TEST_BINARY = master_test
 all : $(LIB) $(BINARY) $(TEST_BINARY)
 
 clean : test_clean
-	rm -f $(LIB) $(OBJECTS)
+	rm -f $(BINARY) $(LIB) $(OBJECTS)
 
 %.o: %.cc
 	$(CXX) $(CXXFLAGS) $(INCPATH) -c $< -o $@
