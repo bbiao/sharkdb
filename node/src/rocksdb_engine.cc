@@ -20,10 +20,15 @@ RocksDBEngine::~RocksDBEngine() {
 }
   
 std::string RocksDBEngine::Get(const std::string& key) {
-  return "";
+  std::string value;
+  rocksdb::ReadOptions read_options;
+  this->db_->Get(read_options, key, &value);
+  return value;
 }
 
 bool RocksDBEngine::Put(const std::string& key, const std::string& value) {
+  rocksdb::WriteOptions write_options;
+  this->db_->Put(write_options, key, value);
   return true;
 }
 

@@ -30,6 +30,15 @@ class RocksDBEngineTest : public ::testing::Test {
 TEST_F(RocksDBEngineTest, OpenDB) {
   RocksDBEngine* engine = RocksDBEngine::Open("./test_db");
   ASSERT_TRUE(engine != NULL);
+
+  std::string key = "key";
+  std::string value = "value";
+
+  engine->Put(key, value);
+
+  std::string value_get = engine->Get(key);
+
+  ASSERT_STREQ("value", value_get.c_str());
 }
 
 }
