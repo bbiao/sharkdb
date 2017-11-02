@@ -2,13 +2,13 @@
 
 SHARKDB_NODE_NS_BEGIN
 
-Replica::Replica() : table_name(), fragment_id(UINT64_MAX), replica_id(UINT64_MAX) {
+Replica::Replica() : table_name_(), fragment_id_(UINT64_MAX), replica_id_(UINT64_MAX) {
 
 }
 
 Replica* Replica::Create(const ReplicaOptions& replica_options) {
-    Replica* replica = new Replica;
-    return replica;
+  Replica* replica = new Replica;
+  return replica;
 }
 
 Replica::~Replica() {
@@ -16,17 +16,17 @@ Replica::~Replica() {
 }
 
 void Replica::Open() {
-    // check if exists
-    
-    // create on disk or load
+  // check if exists
 
-    /// load from disk
+  // create on disk or load
+
+  /// load from disk
 }
 
 void Replica::Destroy() {
-    //TODO
-    
-    delete this;
+  //TODO
+
+  delete this;
 }
 
 SHARKDB_NODE_NS_END

@@ -10,39 +10,39 @@ struct ReplicaOptions {
 };
 
 class Replica {
-public:
-    Replica();
-    virtual ~Replica();
+ public:
+  Replica();
+  virtual ~Replica();
 
-    static Replica* Create(const ReplicaOptions&);
+  static Replica* Create(const ReplicaOptions&);
 
-    const std::string& GetTableName() {
-        return table_name;
-    }
+  const std::string& table_name() {
+    return table_name_;
+  }
 
-    uint64_t GetFragmentId() const {
-        return fragment_id;
-    }
+  uint64_t fragment_id() const {
+    return fragment_id_;
+  }
 
-    uint64_t GetReplicaId() const {
-        return replica_id;
-    }
+  uint64_t replica_id() const {
+    return replica_id_;
+  }
 
-    const std::string& GetPath() {
-        return path;
-    }
+  const std::string& path() {
+    return path_;
+  }
 
-    void Open();
+  void Open();
 
-    void Destroy();
+  void Destroy();
 
-private:
-    std::string table_name;
-    uint64_t fragment_id;
-    uint64_t replica_id;
-    std::string path;
+ private:
+  std::string table_name_;
+  uint64_t fragment_id_;
+  uint64_t replica_id_;
+  std::string path_;
 
-    StorageEngine* engine;
+  StorageEngine* engine_;
 };
 
 SHARKDB_NODE_NS_END

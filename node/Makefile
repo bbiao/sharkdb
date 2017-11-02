@@ -15,7 +15,7 @@ TEST_BINARY = node_test
 all : $(LIB) $(BINARY) $(TEST_BINARY)
 
 clean : test_clean
-	rm -f $(LIB) $(OBJECTS)
+	rm -f $(BINARY) $(LIB) $(OBJECTS) src/main.o
 
 %.o: %.cc
 	$(CXX) $(CXXFLAGS) $(INCPATH) -c $< -o $@
