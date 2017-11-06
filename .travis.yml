@@ -1,0 +1,24 @@
+language: cpp
+compiler: gcc
+before_install:
+# As of this writing (10 May 2014) the Travis build environment is Ubuntu 12.04,
+# which needs the following ugly dependency incantations to build RocksDB:
+ - sudo apt-get install -y -qq git g++ make libssl-dev
+ - sudo apt-get install -y realpath libgflags-dev libprotobuf-dev libprotoc-dev protobuf-compiler libleveldb-dev
+ - sudo apt-get install -y libsnappy-dev
+ - sudo apt-get install -y cmake
+ - git submodule update --init --recursive
+ - cd brpc && sh config_brpc.sh --headers=/usr/include --libs=/usr/lib && make && cd -
+ - cd googletest && cmake . && make && cd -
+ - cd gflags && cmake . && make && cd -
+ - cd rocksdb && cmake . && make && cd -
+# Lousy hack to disable use and testing of fallocate, which doesn't behave quite
+before_script:
+    - pwd
+script: make
+notifications:
+    recipients:
+        - bbbiao@gmail.com
+    email:
+        on_success: change
+        on_failure: always
