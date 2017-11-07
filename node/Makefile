@@ -1,7 +1,7 @@
 include ../common/base.mk
 
-INCPATH += -I. -I./include -I$(ROCKSDB_PATH)/include -I$(BRPC_PATH)/output/include
-LIBPATH += -L$(GFLAGS_PATH)/lib -L$(ROCKSDB_PATH) -L$(BRPC_PATH)/output/lib -L.
+INCPATH += -I. -I./include -I$(GFLAGS_PATH)/include -I$(ROCKSDB_PATH)/include -I$(BRPC_PATH)/output/include
+LIBPATH += -L. -L$(GFLAGS_PATH)/lib -L$(ROCKSDB_PATH) -L$(BRPC_PATH)/output/lib
 LDFLAGS += -lnode -lrocksdb -lbrpc
 
 SOURCES = $(wildcard src/*.cc)
