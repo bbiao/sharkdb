@@ -17,7 +17,7 @@ all : $(LIB) $(BINARY) $(TEST_BINARY)
 clean : test_clean
 	rm -f $(BINARY) $(LIB) $(OBJECTS)
 
-%.o: %.cc
+src/%.o: src/%.cc
 	$(CXX) $(CXXFLAGS) $(INCPATH) -c $< -o $@
 
 $(LIB) : $(OBJECTS)
