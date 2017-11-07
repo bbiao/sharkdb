@@ -21,8 +21,8 @@ CXX = g++
 CFLAGS = -W -Wall -ggdb -fPIC
 CXXFLAGS += $(CPPFLAGS) -std=c++0x -DNDEBUG -O2 -D__const__= -pipe -ggdb -W -Wall -Wno-unused-parameter -fPIC -fno-omit-frame-pointer
 
-INCPATH = -I$(HDRS)
-LIBPATH = -L$(LIBS)
+INCPATH = $(addprefix, -I, $(HDRS))
+LIBPATH = $(addprefix, -L, $(LIBS))
 
 LDFLAGS = $(STATIC_LINKINGS)
 SYS_LDFLAGS = $(DYNAMIC_LINKINGS)
